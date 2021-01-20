@@ -1,10 +1,10 @@
 import Head from "next/head";
 import Link from "next/link";
 import React, { useEffect } from "react";
-import { useUser } from "../context/userContext";
-import firebase from "../firebase/clientApp";
+import { useUser } from "@/context/userContext";
+import firebase from "@/firebase/clientApp";
 
-export default function Home() {
+export default function Home(): JSX.Element {
   // Our custom hook to get context values
   const { loadingUser, user } = useUser();
 
@@ -40,7 +40,7 @@ export default function Home() {
           Cloud Firestore Security Rules write permissions are required for
           adding users
         </p>
-        <button onClick={createUser}>Create 'nextjs_user'</button>
+        <button onClick={createUser}>Create &apos;nextjs_user&apos;</button>
 
         <p className="description">
           Please press the link below after adding the user

@@ -1,9 +1,24 @@
 import React, { useState, useEffect, createContext, useContext } from "react";
-import firebase from "../firebase/clientApp";
+import firebase from "@/firebase/clientApp";
 
-export const UserContext = createContext();
+type Context = {
+  user?: firebase.User;
+  setUser: (user: firebase.User) => void;
+  loadingUser: boolean;
+};
 
-export default function UserContextComp({ children }) {
+export const UserContext = createContext<Context>({
+  setUser: (_) => {
+    /* do nothing */
+  },
+  loadingUser: false,
+});
+
+export default function UserContextComp({
+  children,
+}: {
+  children: React.ReactNode;
+}): JSX.Element {
   const [user, setUser] = useState(null);
   const [loadingUser, setLoadingUser] = useState(true); // Helpful, to update the UI accordingly.
 
@@ -37,4 +52,4 @@ export default function UserContextComp({ children }) {
 }
 
 // Custom hook that shorthands the context!
-export const useUser = () => useContext(UserContext);
+export const useUser = (): Context => useContext(UserContext);

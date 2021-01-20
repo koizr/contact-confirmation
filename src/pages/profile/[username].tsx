@@ -1,9 +1,17 @@
 import React from "react";
 import Head from "next/head";
+import { GetServerSideProps } from "next";
 
-import { getProfileData } from "../../fetchData/getProfileData";
+import { getProfileData, Profile } from "@/fetchData/getProfileData";
 
-export default function SSRPage({ data }) {
+type Props = {
+  data: {
+    username: string;
+    profile: Profile;
+  };
+};
+
+export default function SSRPage({ data }: Props): JSX.Element {
   const { username, profile } = data;
 
   return (
@@ -22,9 +30,12 @@ export default function SSRPage({ data }) {
   );
 }
 
-export const getServerSideProps = async ({ params }) => {
+export const getServerSideProps: GetServerSideProps<
+  Props,
+  { username: string }
+> = async ({ params }) => {
   const { username } = params;
-  const profile = await getProfileData(username);
+  const profile = await getProfileData(username as string);
   if (!profile) {
     return { notFound: true };
   }
