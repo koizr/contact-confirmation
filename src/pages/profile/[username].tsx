@@ -34,7 +34,10 @@ export const getServerSideProps: GetServerSideProps<
   Props,
   { username: string }
 > = async ({ params }) => {
-  const { username } = params;
+  const username = params?.username;
+  if (!username) {
+    return { notFound: true };
+  }
   const profile = await getProfileData(username as string);
   if (!profile) {
     return { notFound: true };

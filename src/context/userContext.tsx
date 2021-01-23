@@ -19,7 +19,7 @@ export default function UserContextComp({
 }: {
   children: React.ReactNode;
 }): JSX.Element {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<firebase.User | undefined>(undefined);
   const [loadingUser, setLoadingUser] = useState(true); // Helpful, to update the UI accordingly.
 
   useEffect(() => {
@@ -28,11 +28,10 @@ export default function UserContextComp({
       try {
         if (user) {
           // User is signed in.
-          const { uid, displayName, email, photoURL } = user;
           // You could also look for the user doc in your Firestore (if you have one):
           // const userDoc = await firebase.firestore().doc(`users/${uid}`).get()
-          setUser({ uid, displayName, email, photoURL });
-        } else setUser(null);
+          setUser(user);
+        } else setUser(undefined);
       } catch (error) {
         // Most probably a connection error. Handle appropriately.
       } finally {
