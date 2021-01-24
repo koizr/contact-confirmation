@@ -1,8 +1,5 @@
 import admin from "@/firebase/nodeApp";
-
-export type Profile = {
-  message: string;
-};
+import type { Profile } from "@/firebase/types";
 
 export const getProfileData = async (
   username: string
