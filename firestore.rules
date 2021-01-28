@@ -1,0 +1,9 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /profile/{userId} {
+      allow get, update, delete: if request.auth.uid == userId;
+      allow create: if true;
+    }
+  }
+}
