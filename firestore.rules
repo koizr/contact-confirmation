@@ -5,5 +5,114 @@ service cloud.firestore {
       allow get, update, delete: if request.auth.uid == userId;
       allow create: if true;
     }
+
+    match /users/{userId} {
+      allow get, delete: if request.auth.uid == userId;
+      allow update: if request.auth.uid == userId && validateUser(request.resource.data);
+      allow create: if validateUser(request.resource.data);
+
+      function validateUser(data) {
+        let fields = [
+          'firstName',
+          'lastName',
+          'phoneNumber',
+          'groups'
+        ];
+        return data.keys().hasAll(fields) && data.keys().hasOnly(fields)
+          && validateString(data.firstName, 1, 50)
+          && validateString(data.lastName, 1, 50)
+          && validateString(data.phoneNumber, 1, 50)
+          && validateList(data.groups, 0, 100);
+      }
+
+      match /reports/{announcementId} {
+        allow read: if request.auth.uid == userId;
+        allow create: if request.auth.uid == userId
+                        && exists(/databases/$(database)/documents/annoucements/$(announcementId))
+                        && validateUserReport(request.resource.data);
+
+        function validateUserReport(data) {
+          let fields = [
+            'reportedAt'
+          ];
+          return data.keys().hasAll(fields) && data.keys().hasOnly(fields)
+            && data.reportedAt is timestamp;
+        }
+      }
+
+      match /permission {
+        allow get: if request.auth.uid == userId;
+        allow write: if false && validateUserPermission(request.resource.data); // firebase-admin からのみ書き込む
+
+        function validateUserPermission(data) {
+          let fields = [
+            'admin',
+            'groupManager'
+          ];
+          return data.keys().hasAll(fields) && data.keys().hasOnly(fields)
+            && data.admin is bool
+            && validateList(data.groupManager, 0, 100);
+        }
+      }
+    }
+
+    match /groups/{groupId} {
+    	allow get: if true;
+      allow write: if false && validateGroup(request.resource.data); // firebase-admin からのみ書き込む
+
+      function validateGroup(data) {
+        let fields = [
+          'name'
+        ];
+        return data.keys().hasAll(fields) && data.keys().hasOnly(fields)
+          && validateString(data.name, 1, 20);
+      }
+    }
+
+    match /announcements/{announcementId} {
+    	allow get: if true;
+      allow create, update: if get(/databases/$(database)/documents/users/$(request.auth.uid)/permission).data.groupManager.hasAny(resource.data.groupId)
+                              && validateAnnouncement(request.resource.data);
+
+      function validateAnnouncement(data) {
+        let fields = [
+          'groupId',
+          'title',
+          'body',
+          'publishedAt'
+        ];
+        return data.keys().hasAll(fields) && data.keys().hasOnly(fields)
+          && validateString(data.groupId, 1, 40)
+          && validateString(data.title, 1, 40)
+          && validateString(data.body, 1, 10000)
+          && data.publishedAt is timestamp;
+      }
+
+      match /reports/{userId} {
+        allow read: if get(/databases/$(database)/documents/users/$(request.auth.uid)/permission).data.groupManager
+                         .hasAny(get(/databases/$(database)/documents/announcements/$(announcementId)).data.groupId);
+        allow create: if request.auth.uid == userId && validateAnnouncementReport(request.resource.data);
+
+        function validateAnnouncementReport(data) {
+          let fields = [
+            'firstName',
+            'lastName',
+            'phoneNumber'
+          ];
+          return data.keys().hasAll(fields) && data.keys().hasOnly(fields)
+            && validateString(data.firstName, 1, 50)
+            && validateString(data.lastName, 1, 50)
+            && validateString(data.phoneNumber, 1, 50);
+        }
+      }
+    }
+
+    function validateString(data, min, max) {
+      return data is string && data.size() >= min && data.size() <= max;
+    }
+
+    function validateList(data, min, max) {
+      return data is list && data.size() >= min && data.size() <= max;
+    }
   }
 }
