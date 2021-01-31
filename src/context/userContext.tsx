@@ -1,9 +1,11 @@
 import React, { useState, useEffect, createContext, useContext } from "react";
 import firebase from "@/firebase/clientApp";
+import type { User } from "@/models";
+import { getUser } from "@/db/user";
 
 type Context = {
-  user?: firebase.User;
-  setUser: (user: firebase.User) => void;
+  user?: User;
+  setUser: (user: User) => void;
   loadingUser: boolean;
 };
 
@@ -19,19 +21,16 @@ export default function UserContextComp({
 }: {
   children: React.ReactNode;
 }): JSX.Element {
-  const [user, setUser] = useState<firebase.User | undefined>(undefined);
+  const [user, setUser] = useState<User | undefined>(undefined);
   const [loadingUser, setLoadingUser] = useState(true); // Helpful, to update the UI accordingly.
 
   useEffect(() => {
     // Listen authenticated user
     const unsubscriber = firebase.auth().onAuthStateChanged(async (user) => {
       try {
-        if (user) {
-          // User is signed in.
-          // You could also look for the user doc in your Firestore (if you have one):
-          // const userDoc = await firebase.firestore().doc(`users/${uid}`).get()
-          setUser(user);
-        } else setUser(undefined);
+        setUser(user ? await getUser(user.uid) : undefined);
+        console.log("on auth status changed:");
+        console.log(user);
       } catch (error) {
         // Most probably a connection error. Handle appropriately.
       } finally {
