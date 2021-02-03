@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import { useRouter } from "next/router";
 import { signin } from "@/auth";
 import Link from "@/components/atoms/Link";
-import PageWithBackButton from "@/components/templates/PageWithBackButton";
+import WithBackButton from "@/components/templates/WithBackButton";
 
 const SignIn: React.FC = () => {
+  // TODO: サインイン済みなら Home に遷移
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -23,7 +24,7 @@ const SignIn: React.FC = () => {
   };
 
   return (
-    <PageWithBackButton title="Sign in" onClickBackButton={() => router.back()}>
+    <WithBackButton title="Sign in">
       <div>
         <label>Email:</label>
         <input
@@ -49,7 +50,7 @@ const SignIn: React.FC = () => {
           Sign up
         </Link>
       </div>
-    </PageWithBackButton>
+    </WithBackButton>
   );
 };
 
