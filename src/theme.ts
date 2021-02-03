@@ -4,7 +4,7 @@ export const theme = {
     textOnMain: "white",
     moderate: "#333",
   },
-  contentWidth: 1200,
+  contentWidth: 640,
 };
 
 export type Theme = typeof theme;

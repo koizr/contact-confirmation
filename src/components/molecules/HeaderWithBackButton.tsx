@@ -7,13 +7,16 @@ const FlexHeader = styled(Header)`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 2rem;
 `;
 
 const FlexItemSide = styled.div`
-  width: ${(props) => props.theme.contentWidth / 6}px;
+  width: 3rem;
 `;
 
-const FlexItemMain = styled.div``;
+const FlexItemMain = styled.div`
+  text-align: center;
+`;
 
 const HeaderWithBackButton: React.FC<{
   title: string;
