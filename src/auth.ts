@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { User } from "@/models";
 import firebase from "@/firebase/clientApp";
 
-export const useRequireLogin = (): { loadingUser: boolean; user?: User } => {
+export const useRequireSignIn = (): { loadingUser: boolean; user?: User } => {
   const { loadingUser, user } = useUser();
 
   const router = useRouter();

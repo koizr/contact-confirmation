@@ -1,9 +1,9 @@
 import React from "react";
-import Template from "@/components/templates/Home";
-import { useRequireLogin } from "@/auth";
+import WithUserHeader from "@/components/templates/WithUserHeader";
+import { useRequireSignIn } from "@/auth";
 
 const Home: React.FC = () => {
-  const { loadingUser, user } = useRequireLogin();
+  const { loadingUser, user } = useRequireSignIn();
 
   if (loadingUser) {
     return <div>Loading...</div>;
@@ -12,7 +12,7 @@ const Home: React.FC = () => {
     return <div>User not found</div>;
   }
 
-  return <Template user={user}></Template>;
+  return <WithUserHeader user={user}></WithUserHeader>;
 };
 
 export default Home;

@@ -1,7 +1,7 @@
 import styled from "styled-components";
-import { ArrowLeft } from "@styled-icons/feather";
+import { Settings } from "@styled-icons/feather";
 
-export default styled(ArrowLeft)`
+export default styled(Settings)`
   width: 1em;
   height: 1em;
   cursor: pointer;

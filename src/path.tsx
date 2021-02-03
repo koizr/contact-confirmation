@@ -3,4 +3,5 @@ export const path = {
   signin: "/signin",
   signup: "/signup",
   signout: "/signout",
+  settings: "/settings",
 };
