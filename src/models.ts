@@ -40,3 +40,6 @@ export type UserPermission = {
 export type UserReport = {
   reportedAt: Date;
 };
+
+export const fullName = ({ firstName, lastName }: User): string =>
+  `${lastName} ${firstName}`;

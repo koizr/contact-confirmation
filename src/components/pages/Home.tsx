@@ -12,7 +12,7 @@ const Home: React.FC = () => {
     return <div>User not found</div>;
   }
 
-  return <WithUserHeader user={user}></WithUserHeader>;
+  return <WithUserHeader></WithUserHeader>;
 };
 
 export default Home;

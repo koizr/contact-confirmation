@@ -4,7 +4,8 @@ import { useRouter } from "next/router";
 import { path } from "@/path";
 import SettingButton from "@/components/atoms/SettingButton";
 import Header from "@/components/atoms/Header";
-import { User } from "@/models";
+import { useRequireSignIn } from "@/auth";
+import { User, fullName } from "@/models";
 
 const FlexHeader = styled(Header)`
   display: flex;
@@ -22,14 +23,22 @@ const FlexItemMain = styled.div`
   padding-left: 1rem;
 `;
 
-const UserHeader: React.FC<{ user: Pick<User, "firstName" | "lastName"> }> = ({
-  user: { firstName, lastName },
-}) => {
-  const fullName = `${firstName} ${lastName}`;
+const UserHeader: React.FC = () => {
   const router = useRouter();
+  const { loadingUser, user } = useRequireSignIn();
+  const dummyUser: User = {
+    id: "",
+    firstName: "",
+    lastName: "",
+    phoneNumber: "",
+    groups: [],
+  };
+
   return (
     <FlexHeader>
-      <FlexItemMain>{fullName}</FlexItemMain>
+      <FlexItemMain>
+        {fullName(!loadingUser && user ? user : dummyUser)}
+      </FlexItemMain>
       <FlexItemSide>
         <SettingButton onClick={() => router.push(path.settings)} />
       </FlexItemSide>
