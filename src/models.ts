@@ -17,10 +17,10 @@ export type Announcement = {
 
 export type ReportId = string;
 
-export type Report = { id: ReportId } & Pick<
-  User,
-  "firstName" | "lastName" | "phoneNumber"
->;
+export type Report = {
+  id: ReportId;
+  reportedAt: Date;
+} & Pick<User, "firstName" | "lastName" | "phoneNumber">;
 
 export type UserId = string;
 

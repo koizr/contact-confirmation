@@ -22,7 +22,9 @@ export type AnnouncementDoc = Omit<Announcement, "id" | "publishedAt"> & {
   publishedAt: firestore.Timestamp;
 };
 
-export type ReportDoc = Omit<Report, "id">;
+export type ReportDoc = Omit<Report, "id"> & {
+  reportedAt: firestore.Timestamp;
+};
 
 export type UserDoc = Omit<User, "id">;
 

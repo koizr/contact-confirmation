@@ -57,7 +57,7 @@ service cloud.firestore {
     }
 
     match /groups/{groupId} {
-    	allow get: if true;
+    	allow read: if true;
       allow write: if false && validateGroup(request.resource.data); // firebase-admin からのみ書き込む
 
       function validateGroup(data) {
@@ -70,7 +70,7 @@ service cloud.firestore {
     }
 
     match /announcements/{announcementId} {
-    	allow get: if true;
+    	allow read: if true;
       allow create, update: if get(/databases/$(database)/documents/users/$(request.auth.uid)/permission).data.groupManager.hasAny(resource.data.groupId)
                               && validateAnnouncement(request.resource.data);
 
@@ -97,12 +97,14 @@ service cloud.firestore {
           let fields = [
             'firstName',
             'lastName',
-            'phoneNumber'
+            'phoneNumber',
+            'reportedAt'
           ];
           return data.keys().hasAll(fields) && data.keys().hasOnly(fields)
             && validateString(data.firstName, 1, 50)
             && validateString(data.lastName, 1, 50)
-            && validateString(data.phoneNumber, 1, 50);
+            && validateString(data.phoneNumber, 1, 50)
+            && data.reportedAt is timestamp;
         }
       }
     }
