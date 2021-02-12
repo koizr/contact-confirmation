@@ -1,18 +1,10 @@
-import React from "react";
 import WithUserHeader from "@/components/templates/WithUserHeader";
+import React from "react";
 import { useRequireSignIn } from "@/auth";
-
 const Home: React.FC = () => {
   const { loadingUser, user } = useRequireSignIn();
 
-  if (loadingUser) {
-    return <div>Loading...</div>;
-  }
-  if (!user) {
-    return <div>User not found</div>;
-  }
-
-  return <WithUserHeader></WithUserHeader>;
+  return <WithUserHeader loading={loadingUser}></WithUserHeader>;
 };
 
 export default Home;
