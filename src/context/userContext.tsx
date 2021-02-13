@@ -1,7 +1,6 @@
 import React, { useState, useEffect, createContext, useContext } from "react";
-import firebase from "@/firebase/clientApp";
+import { useApi } from "@/api";
 import type { User } from "@/models";
-import { getUser } from "@/db/user";
 
 type Context = {
   user?: User;
@@ -24,13 +23,13 @@ export default function UserContextComp({
   const [user, setUser] = useState<User | undefined>(undefined);
   const [loadingUser, setLoadingUser] = useState(true); // Helpful, to update the UI accordingly.
 
+  const api = useApi();
+
   useEffect(() => {
     // Listen authenticated user
-    const unsubscriber = firebase.auth().onAuthStateChanged(async (user) => {
+    const unsubscriber = api.onAuthStateChanged(async (user) => {
       try {
-        setUser(user ? await getUser(user.uid) : undefined);
-        console.log("on auth status changed:");
-        console.log(user);
+        setUser(user);
       } catch (error) {
         // Most probably a connection error. Handle appropriately.
       } finally {
@@ -40,7 +39,7 @@ export default function UserContextComp({
 
     // Unsubscribe auth listener on unmount
     return () => unsubscriber();
-  }, []);
+  }, [api]);
 
   return (
     <UserContext.Provider value={{ user, setUser, loadingUser }}>
