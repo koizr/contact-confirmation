@@ -1,21 +1,21 @@
 import React from "react";
-import Header from "@/components/organisms/HeaderWithBackButton";
-import Head from "@/components/templates/Head";
+import Header, {
+  HeaderWithBackButtonProps as HeaderProps,
+} from "@/components/organisms/HeaderWithBackButton";
 import PageContainer, {
   PageContainerProps,
 } from "@/components/templates/PageContainer";
+import MainContents from "@/components/templates/MainContents";
 
-const PageWithBackButton: React.FC<
-  PageContainerProps & {
-    title: string;
-  }
-> = ({ title, children, ...pageContainerProps }) => (
-  <PageContainer {...pageContainerProps}>
-    <Head title={title} />
-    <main>
-      <Header title={title} />
-      {children}
-    </main>
+const PageWithBackButton: React.FC<PageContainerProps & HeaderProps> = ({
+  title,
+  back,
+  children,
+  ...pageContainerProps
+}) => (
+  <PageContainer title={title} {...pageContainerProps}>
+    <Header title={title} back={back}></Header>
+    <MainContents>{children}</MainContents>
   </PageContainer>
 );
 

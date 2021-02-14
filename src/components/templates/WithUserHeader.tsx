@@ -1,20 +1,17 @@
 import React from "react";
-import Head from "@/components/templates/Head";
 import UserHeader from "@/components/organisms/UserHeader";
 import PageContainer, {
   PageContainerProps,
 } from "@/components/templates/PageContainer";
+import MainContents from "@/components/templates/MainContents";
 
 const WithUserHeader: React.FC<PageContainerProps> = ({
   children,
-  ...pageContainerProps
+  ...props
 }) => (
-  <PageContainer {...pageContainerProps}>
-    <Head title="Home" />
-    <main>
-      <UserHeader />
-      {children}
-    </main>
+  <PageContainer {...props}>
+    <UserHeader />
+    <MainContents>{children}</MainContents>
   </PageContainer>
 );
 
