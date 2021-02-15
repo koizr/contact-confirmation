@@ -27,6 +27,7 @@ export const useRequireSignIn = (): { loadingUser: boolean; user?: User } => {
   };
 };
 
+// TODO: API に移す
 export const signin = (
   email: string,
   password: string,

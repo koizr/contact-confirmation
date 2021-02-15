@@ -7,4 +7,7 @@ export type Api = {
   onAuthStateChanged(handler: (user?: models.User) => void): Unsubscriber;
   getUser(): Promise<models.User | undefined>;
   getAnnouncements(): Promise<models.Announcement[]>;
+  getAnnouncement(
+    id: models.AnnouncementId
+  ): Promise<models.Announcement | undefined>;
 };

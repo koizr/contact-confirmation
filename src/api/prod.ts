@@ -1,7 +1,26 @@
 import firebase from "@/firebase/clientApp";
 import { AnnouncementDoc, UserDoc } from "@/firebase/types";
-import { User, Announcement, UserId } from "@/models";
+import { User, Announcement, UserId, AnnouncementId } from "@/models";
 import { Api } from "./index";
+
+const mapUser = (id: UserId, doc: UserDoc): User => ({
+  id: id,
+  firstName: doc.firstName,
+  lastName: doc.lastName,
+  phoneNumber: doc.phoneNumber,
+  groups: doc.groups,
+});
+
+const mapAnnouncement = (
+  id: AnnouncementId,
+  doc: AnnouncementDoc
+): Announcement => ({
+  id: id,
+  groupId: doc.groupId,
+  title: doc.title,
+  body: doc.body,
+  publishedAt: doc.publishedAt.toDate(),
+});
 
 export class FirestoreApi implements Api {
   onAuthStateChanged(handler: (user?: User) => void): () => void {
@@ -27,13 +46,7 @@ export class FirestoreApi implements Api {
       return undefined;
     }
 
-    return {
-      id: id,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      phoneNumber: user.phoneNumber,
-      groups: user.groups,
-    };
+    return mapUser(id, user);
   }
 
   async getUser(): Promise<User | undefined> {
@@ -53,15 +66,15 @@ export class FirestoreApi implements Api {
       .get();
 
     return announcementDocs.docs.map((doc) => {
-      const id = doc.id;
-      const data = doc.data() as AnnouncementDoc;
-      return {
-        id,
-        groupId: data.groupId,
-        title: data.title,
-        body: data.body,
-        publishedAt: data.publishedAt.toDate(),
-      };
+      return mapAnnouncement(doc.id, doc.data() as AnnouncementDoc);
     });
+  }
+
+  async getAnnouncement(id: AnnouncementId): Promise<Announcement | undefined> {
+    const doc = await firebase.firestore().doc(`announcements/${id}`).get();
+    if (!doc.exists) {
+      return undefined;
+    }
+    return mapAnnouncement(doc.id, doc.data() as AnnouncementDoc);
   }
 }

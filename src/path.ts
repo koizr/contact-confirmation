@@ -4,4 +4,5 @@ export const path = {
   signup: "/signup",
   signout: "/signout",
   settings: "/settings",
+  announcement: (id: string): string => `/announcement/${id}`,
 };

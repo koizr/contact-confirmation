@@ -24,7 +24,7 @@ const SignIn: React.FC = () => {
   };
 
   return (
-    <WithBackButton title="Sign in">
+    <WithBackButton title="Sign in" back={() => router.back()}>
       <div>
         <label>Email:</label>
         <input
